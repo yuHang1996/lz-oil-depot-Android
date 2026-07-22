@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_channel_name">环境风险预警</string>
+    <string name="notification_channel_description">污染物超限、敏感点风险与模型任务通知</string>
+</resources>
+
