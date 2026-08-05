@@ -1,8 +1,8 @@
 package edu.lzjtu.environment.oildepot.data.model
 
 enum class DepotId(val displayName: String, val shortName: String) {
-    CRUDE("兰州原油库", "原油库"),
-    REFINED("兰州成品油库", "成品油库"),
+    CRUDE("兰州原油库", "原油库2"),
+    REFINED("兰州成品油库", "成品油库2"),
 }
 
 enum class PointType(val displayName: String) {

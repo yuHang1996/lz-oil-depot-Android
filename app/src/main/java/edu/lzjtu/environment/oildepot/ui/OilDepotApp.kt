@@ -61,7 +61,7 @@ fun OilDepotApp(
                 TopAppBar(
                     title = {
                         Column {
-                            Text("兰州油库环境应急监控", style = MaterialTheme.typography.titleMedium)
+                            Text("兰州油库环境应急监控2", style = MaterialTheme.typography.titleMedium)
                             Text(
                                 text = state.dashboard?.let { "数据更新 ${it.updatedAt}" } ?: "正在加载监测数据",
                                 style = MaterialTheme.typography.bodySmall,
