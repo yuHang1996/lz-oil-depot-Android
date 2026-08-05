@@ -10,5 +10,5 @@ captures/
 *.jks
 *.keystore
 secrets.properties
-.docs/
+docs/
 
