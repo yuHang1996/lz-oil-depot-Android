@@ -10,6 +10,7 @@ import edu.lzjtu.environment.oildepot.data.repository.FakeMonitoringRepository
 import edu.lzjtu.environment.oildepot.data.repository.MonitoringRepository
 import edu.lzjtu.environment.oildepot.data.repository.UnavailableProductionRepository
 import edu.lzjtu.environment.oildepot.domain.PredictionInputValidator
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +24,7 @@ class AppViewModel(
     val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
 
     init {
-        refreshDashboard()
+        observeDashboard()
     }
 
     fun selectDepot(depotId: DepotId) {
@@ -77,24 +78,31 @@ class AppViewModel(
         _uiState.update { it.copy(completedMeasureIds = it.completedMeasureIds + measureId) }
     }
 
-    private fun refreshDashboard() {
+    private fun observeDashboard() {
         viewModelScope.launch {
-            runCatching { repository.loadDashboard() }
-                .onSuccess { dashboard ->
-                    _uiState.update { it.copy(loading = false, dashboard = dashboard, loadError = null) }
-                }
-                .onFailure { error ->
-                    _uiState.update {
-                        it.copy(
-                            loading = false,
-                            loadError = error.message ?: "数据加载失败",
-                        )
+            do {
+                runCatching { repository.loadDashboard() }
+                    .onSuccess { dashboard ->
+                        _uiState.update { it.copy(loading = false, dashboard = dashboard, loadError = null) }
                     }
-                }
+                    .onFailure { error ->
+                        _uiState.update {
+                            it.copy(
+                                loading = false,
+                                loadError = error.message ?: "数据加载失败",
+                            )
+                        }
+                    }
+
+                if (!BuildConfig.USE_MOCK_DATA) break
+                delay(DEMO_REFRESH_INTERVAL_MS)
+            } while (true)
         }
     }
 
     companion object {
+        private const val DEMO_REFRESH_INTERVAL_MS = 5_000L
+
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {

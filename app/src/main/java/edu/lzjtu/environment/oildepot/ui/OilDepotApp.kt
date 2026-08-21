@@ -45,6 +45,7 @@ import kotlinx.coroutines.launch
 fun OilDepotApp(
     initialSection: MainSection,
     onSendDemoNotification: () -> Boolean,
+    onSendTestSms: (List<String>) -> Unit,
     viewModel: AppViewModel = viewModel(factory = AppViewModel.Factory),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -61,7 +62,7 @@ fun OilDepotApp(
                 TopAppBar(
                     title = {
                         Column {
-                            Text("兰州油库环境应急监控2", style = MaterialTheme.typography.titleMedium)
+                            Text("兰州油库环境应急监控1", style = MaterialTheme.typography.titleMedium)
                             Text(
                                 text = state.dashboard?.let { "数据更新 ${it.updatedAt}" } ?: "正在加载监测数据",
                                 style = MaterialTheme.typography.bodySmall,
@@ -149,6 +150,7 @@ fun OilDepotApp(
                                 )
                             }
                         },
+                        onSendTestSms = onSendTestSms,
                         modifier = Modifier.padding(innerPadding),
                     )
                     MainSection.MEASURES -> MeasuresScreen(

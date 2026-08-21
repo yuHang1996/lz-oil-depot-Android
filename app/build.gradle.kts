@@ -27,7 +27,7 @@ android {
             versionNameSuffix = "-demo"
             buildConfigField("boolean", "USE_MOCK_DATA", "true")
             buildConfigField("String", "API_BASE_URL", "\"https://example.invalid/\"")
-            resValue("string", "app_name", "兰州油库环境应急监控 Demo")
+            resValue("string", "app_name", "兰州油库环境应急监控")
         }
         create("production") {
             dimension = "environment"
@@ -81,6 +81,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.maplibre.android.opengl)
 
     testImplementation(libs.junit)
 

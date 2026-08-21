@@ -39,6 +39,7 @@ fun AlertsScreen(
     onDepotSelected: (DepotId) -> Unit,
     onAcknowledge: (String) -> Unit,
     onSendDemoNotification: () -> Unit,
+    onSendTestSms: (List<String>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val depotAlerts = alerts.filter { it.depotId == selectedDepot }
@@ -61,6 +62,42 @@ fun AlertsScreen(
                 }
             }
         }
+        item {
+            Card(
+                shape = RoundedCornerShape(8.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                border = CardDefaults.outlinedCardBorder(),
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(9.dp),
+                ) {
+                    Text("测试短信", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Text(
+                        "点击后将使用本机 SIM 自动发送给全部已配置联系人，并产生运营商短信资费。",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    if (TEST_SMS_RECIPIENTS.isEmpty()) {
+                        Text(
+                            "尚未配置测试联系人",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.error,
+                        )
+                    } else {
+                        OutlinedButton(
+                            onClick = {
+                                onSendTestSms(TEST_SMS_RECIPIENTS.map { it.phoneNumber })
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(6.dp),
+                        ) {
+                            Text("自动发送测试短信（${TEST_SMS_RECIPIENTS.size} 人）")
+                        }
+                    }
+                }
+            }
+        }
         items(depotAlerts, key = { it.id }) { alert ->
             AlertCard(
                 alert = alert,
@@ -79,6 +116,19 @@ fun AlertsScreen(
         }
     }
 }
+
+private data class TestSmsRecipient(
+    val label: String,
+    val phoneNumber: String,
+)
+
+// 仅用于内部测试：在引号内填写获授权的接收号码；可按相同格式增减联系人。
+private val TEST_SMS_RECIPIENTS = listOf(
+    TestSmsRecipient(label = "应急值班", phoneNumber = "15658063629"),
+    TestSmsRecipient(label = "环保负责人", phoneNumber = "18194233413"),
+    TestSmsRecipient(label = "安全负责人", phoneNumber = "15658063629"),
+).filter { it.phoneNumber.isNotBlank() }
+    .distinctBy { it.phoneNumber }
 
 @Composable
 private fun AlertCard(alert: AlertEvent, acknowledged: Boolean, onAcknowledge: () -> Unit) {

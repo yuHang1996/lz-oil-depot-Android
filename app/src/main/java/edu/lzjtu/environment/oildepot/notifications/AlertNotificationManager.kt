@@ -58,7 +58,7 @@ class AlertNotificationManager(
             .setContentText("苯浓度超限，预计 74 分钟后影响黄河岸线 S-01")
             .setStyle(
                 NotificationCompat.BigTextStyle().bigText(
-                    "事件 ENV-20260722-001：厂界东北大气点苯浓度为阈值的 1.31 倍，建议立即加密监测并复核源头。",
+                    "事件 ENV-20260722-001：厂界北滨河路苯浓度为阈值的 1.31 倍，建议立即加密监测并复核源头。",
                 ),
             )
             .setPriority(NotificationCompat.PRIORITY_HIGH)
