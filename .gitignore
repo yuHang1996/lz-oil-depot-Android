@@ -11,4 +11,5 @@ captures/
 *.keystore
 secrets.properties
 docs/
+.vscode/
 

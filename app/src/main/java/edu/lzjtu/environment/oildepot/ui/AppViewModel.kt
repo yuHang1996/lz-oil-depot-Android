@@ -79,6 +79,7 @@ class AppViewModel(
     }
 
     private fun observeDashboard() {
+        // if (BuildConfig.DEBUG) return
         viewModelScope.launch {
             do {
                 runCatching { repository.loadDashboard() }

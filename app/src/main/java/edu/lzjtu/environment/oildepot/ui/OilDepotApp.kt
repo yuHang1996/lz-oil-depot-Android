@@ -1,15 +1,23 @@
 package edu.lzjtu.environment.oildepot.ui
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.Dashboard
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Science
 import androidx.compose.material.icons.outlined.WarningAmber
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,10 +36,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import edu.lzjtu.environment.oildepot.R
 import edu.lzjtu.environment.oildepot.ui.screens.AlertsScreen
 import edu.lzjtu.environment.oildepot.ui.screens.MeasuresScreen
 import edu.lzjtu.environment.oildepot.ui.screens.OverviewScreen
@@ -57,6 +68,11 @@ fun OilDepotApp(
     }
 
     OilDepotTheme {
+        if (state.loading) {
+            OilDepotLoading()
+            return@OilDepotTheme
+        }
+
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -88,14 +104,7 @@ fun OilDepotApp(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             containerColor = MaterialTheme.colorScheme.background,
         ) { innerPadding ->
-            if (state.loading) {
-                Column(
-                    modifier = Modifier.fillMaxSize().padding(innerPadding),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    CircularProgressIndicator(modifier = Modifier.padding(top = 80.dp))
-                }
-            } else if (state.dashboard == null) {
+            if (state.dashboard == null) {
                 Column(
                     modifier = Modifier.fillMaxSize().padding(innerPadding).padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -162,6 +171,35 @@ fun OilDepotApp(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun OilDepotLoading() {
+    val transition = rememberInfiniteTransition(label = "oil depot loading")
+    val rotation by transition.animateFloat(
+        initialValue = -10f,
+        targetValue = 10f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1_000),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "loading rotation",
+    )
+
+    Box(
+        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+        contentAlignment = Alignment.Center,
+    ) {
+        Image(
+            painter = painterResource(R.drawable.oil_depot_loading_vector),
+            contentDescription = "正在加载",
+            modifier = Modifier
+                .size(160.dp)
+                .graphicsLayer {
+                    rotationZ = rotation
+                },
+        )
     }
 }
 

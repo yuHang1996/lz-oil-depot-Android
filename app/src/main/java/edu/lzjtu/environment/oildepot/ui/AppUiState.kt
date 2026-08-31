@@ -7,7 +7,7 @@ import edu.lzjtu.environment.oildepot.data.model.PredictionResult
 
 enum class MainSection(val title: String) {
     OVERVIEW("态势1"),
-    POINTS("点位"),
+    POINTS("点位2"),
     PREDICTION("预测"),
     ALERTS("预警"),
     MEASURES("措施"),
